@@ -1,5 +1,3 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import Editor from "@monaco-editor/react";
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
@@ -53,7 +51,7 @@ export default function UniversalIDE() {
   const [stderr, setStderr] = useState<string>("");
   const [busy, setBusy] = useState(false);
 
-  // Live mapper state (generic, runs on your current code + input)
+  // Live mapper state
   const [trace, setTrace] = useState<TracePacket | null>(null);
   const [traceBusy, setTraceBusy] = useState(false);
 
@@ -64,7 +62,7 @@ export default function UniversalIDE() {
 
   const langMeta = useMemo(() => LANGS.find(l => l.key === lang)!, [lang]);
 
-  useEffect(() => { setCode(langMeta.template); }, [langMeta.key]); // reset template when switching
+  useEffect(() => { setCode(langMeta.template); }, [langMeta.key]);
 
   // Debounced live trace on code/stdin change
   useEffect(() => {
@@ -94,8 +92,7 @@ export default function UniversalIDE() {
       const pkt = await api<TracePacket>("/api/trace", { language: lang, code, stdin });
       setTrace(pkt);
     } catch (e) {
-      // Fallback: small client-side “sanity” mapper to still show *something*
-      // If user types a*b+c without parentheses, highlight precedence mismatch.
+      // Fallback: small client-side “sanity” mapper so UI still shows something
       const a=2,b=6,c=4;
       const expected = [{expr:"b + c", value: b+c},{expr:"a * (b + c)", value: a*(b+c)}];
       const src = code.toLowerCase();
