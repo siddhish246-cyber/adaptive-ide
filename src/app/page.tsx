@@ -1,3 +1,5 @@
+import UniversalIDE from "../components/UniversalIDE";
+
 export default function Page() {
   return (
     <main className="min-h-screen bg-[#0b1020] text-slate-100">
@@ -8,4 +10,3 @@ export default function Page() {
   );
 }
 
-import UniversalIDE from "@/components/UniversalIDE";
